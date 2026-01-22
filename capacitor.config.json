@@ -4,7 +4,7 @@
   "webDir": "dist",
   "plugins": {},
   "server": {
-    "url": "http://localhost:3000",
+    "url": "https://gib8c8.loca.lt",
     "cleartext": true
   }
 }
