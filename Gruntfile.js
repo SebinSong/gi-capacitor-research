@@ -183,7 +183,6 @@ module.exports = (grunt) => {
   // https://browsersync.io/docs/options
   const browserSyncOptions = {
     cors: true,
-    https: true,
     files: [
       // Glob matching uses https://github.com/micromatch/picomatch
       `${distJS}/main.js`,
@@ -402,7 +401,12 @@ module.exports = (grunt) => {
         options: { env: { SKIP_DB_FS_CASE_SENSITIVITY_CHECK: 'true', ...process.env } }
       },
       chelDevDeploy: `find contracts -iname "*.manifest.json" | xargs -r ./node_modules/.bin/chel deploy ${dbPath}`,
-      chelProdDeploy: `find ${distContracts} -iname "*.manifest.json" | xargs -r ./node_modules/.bin/chel deploy ${dbPath}`
+      chelProdDeploy: `find ${distContracts} -iname "*.manifest.json" | xargs -r ./node_modules/.bin/chel deploy ${dbPath}`,
+
+      // Ensure below before running this task.
+      // 1. adb(Android Debug Bridge) is installed on the Mac - use homebrew to download and install it on the machine.
+      // 2. either a physical android device or android emulator is connected to the Mac.
+      androidReversePortForwarding: 'adb reverse port:3000 port:3000'
     }
   })
 
@@ -571,6 +575,7 @@ module.exports = (grunt) => {
 
   grunt.registerTask('default', ['dev'])
   grunt.registerTask('dev', ['exec:gitconfig', 'checkDependencies', 'chelDeploy', 'build:watch', 'backend:relaunch', 'keepalive'])
+  grunt.registerTask('dev:android', ['exec:androidReversePortForwarding', 'dev'])
 
   // --------------------
   // - Our esbuild task
