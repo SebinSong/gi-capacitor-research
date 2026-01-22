@@ -1,0 +1,13 @@
+{
+	"appId": "app.groupincome",
+	"appName": "group-income",
+	"webDir": "dist",
+	"plugins": {},
+	"server": {
+		"url": "http://localhost:3000",
+		"cleartext": true
+	},
+	"packageClassList": [
+		"DialogPlugin"
+	]
+}

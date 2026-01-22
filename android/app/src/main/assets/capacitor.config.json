@@ -1,0 +1,10 @@
+{
+	"appId": "app.groupincome",
+	"appName": "group-income",
+	"webDir": "dist",
+	"plugins": {},
+	"server": {
+		"url": "https://gib8c8.loca.lt",
+		"cleartext": true
+	}
+}

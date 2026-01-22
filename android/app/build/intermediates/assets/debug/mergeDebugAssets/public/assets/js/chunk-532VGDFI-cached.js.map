@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../frontend/views/utils/breakpoints.js"],
+  "sourcesContent": ["// Same as CSS breakpoints at _variables.scss\nexport const TABLET = 769\nexport const DESKTOP = 1200\n"],
+  "mappings": ";AACO,IAAM,SAAS;AACf,IAAM,UAAU;",
+  "names": []
+}

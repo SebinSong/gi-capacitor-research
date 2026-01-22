@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../frontend/model/contracts/shared/payments/index.js"],
+  "sourcesContent": ["'use strict'\n\nimport { unionOf, literalOf } from '~/frontend/model/contracts/misc/flowTyper.js'\n\nexport const PAYMENT_PENDING = 'pending'\nexport const PAYMENT_CANCELLED = 'cancelled'\nexport const PAYMENT_ERROR = 'error'\nexport const PAYMENT_NOT_RECEIVED = 'not-received'\nexport const PAYMENT_COMPLETED = 'completed'\nexport const paymentStatusType         = unionOf(...[PAYMENT_PENDING, PAYMENT_CANCELLED, PAYMENT_ERROR, PAYMENT_NOT_RECEIVED, PAYMENT_COMPLETED].map(k => literalOf(k)))\nexport const PAYMENT_TYPE_MANUAL = 'manual'\nexport const PAYMENT_TYPE_BITCOIN = 'bitcoin'\nexport const PAYMENT_TYPE_PAYPAL = 'paypal'\nexport const paymentType         = unionOf(...[PAYMENT_TYPE_MANUAL, PAYMENT_TYPE_BITCOIN, PAYMENT_TYPE_PAYPAL].map(k => literalOf(k)))\n"],
+  "mappings": ";;;;;;AAIO,IAAM,kBAAkB;AACxB,IAAM,oBAAoB;AAC1B,IAAM,gBAAgB;AACtB,IAAM,uBAAuB;AAC7B,IAAM,oBAAoB;AAC1B,IAAM,oBAA4B,QAAQ,GAAG,CAAC,iBAAiB,mBAAmB,eAAe,sBAAsB,iBAAiB,EAAE,IAAI,OAAK,UAAU,CAAC,CAAC,CAAC;AAChK,IAAM,sBAAsB;AAC5B,IAAM,uBAAuB;AAC7B,IAAM,sBAAsB;AAC5B,IAAM,cAAsB,QAAQ,GAAG,CAAC,qBAAqB,sBAAsB,mBAAmB,EAAE,IAAI,OAAK,UAAU,CAAC,CAAC,CAAC;",
+  "names": []
+}
