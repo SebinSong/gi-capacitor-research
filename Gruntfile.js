@@ -183,6 +183,7 @@ module.exports = (grunt) => {
   // https://browsersync.io/docs/options
   const browserSyncOptions = {
     cors: true,
+    https: true,
     files: [
       // Glob matching uses https://github.com/micromatch/picomatch
       `${distJS}/main.js`,
