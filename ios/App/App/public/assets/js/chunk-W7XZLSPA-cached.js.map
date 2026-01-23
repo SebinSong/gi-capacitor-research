@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../frontend/views/utils/allowedUrls.js"],
+  "sourcesContent": ["import Vue from 'vue'\n\n/**\n * Table of all well-known safe URLs used in the app UI.\n *\n * - Use it e.g. to avoid typing URLs.\n * - It has been frozen as an extra safety measure, to prevent any alteration even in case of a bug.\n */\nconst ALLOWED_URLS         = Object.freeze(Object.fromEntries([\n  ['OKTURTLES_PAGE', 'https://okturtles.org'],\n  ['OKTURTLES_SUPPORT_PAGE', 'https://okturtles.org/donate'],\n  ['ISSUE_PAGE', 'https://github.com/okTurtles/group-income/issues'],\n  ['BLOG_PAGE', 'https://groupincome.org/blog'],\n  ['DONATE_PAGE', 'https://groupincome.org/donate'],\n  ['FAQ_PAGE', 'https://groupincome.org/faq'],\n  ['COMMUNITY_PAGE', 'https://github.com/okTurtles/group-income/discussions'],\n  ['TERMS_PAGE', 'https://groupincome.org/terms-and-conditions'],\n  ['WIKIPEDIA_DUNBARS_NUMBER', \"https://en.wikipedia.org/wiki/Dunbar's_number\"]\n]))\n\nVue.prototype.ALLOWED_URLS = ALLOWED_URLS\n\nexport default ALLOWED_URLS\n"],
+  "mappings": ";;;;;;AAAA;AAQA,IAAM,eAAuB,OAAO,OAAO,OAAO,YAAY;AAAA,EAC5D,CAAC,kBAAkB,uBAAuB;AAAA,EAC1C,CAAC,0BAA0B,8BAA8B;AAAA,EACzD,CAAC,cAAc,kDAAkD;AAAA,EACjE,CAAC,aAAa,8BAA8B;AAAA,EAC5C,CAAC,eAAe,gCAAgC;AAAA,EAChD,CAAC,YAAY,6BAA6B;AAAA,EAC1C,CAAC,kBAAkB,uDAAuD;AAAA,EAC1E,CAAC,cAAc,8CAA8C;AAAA,EAC7D,CAAC,4BAA4B,+CAA+C;AAC9E,CAAC,CAAC;AAEF,gBAAI,UAAU,eAAe;AAE7B,IAAO,sBAAQ;",
+  "names": []
+}
