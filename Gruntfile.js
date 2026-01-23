@@ -51,7 +51,7 @@ const {
 if (!['development', 'production'].includes(NODE_ENV)) {
   throw new TypeError(`Invalid NODE_ENV value: ${NODE_ENV}.`)
 }
-// 'grunt pin' can override this
+
 let CONTRACTS_VERSION = packageJSON.contractsVersion
 // In development, append a timestamp so that browsers will detect a new version
 // and reload whenever the live server is restarted.

@@ -125,6 +125,7 @@ const setupChelonia = async (): Promise<*> => {
 
   // When running in a SW, this call here needs to be moved to be made from the
   // SW itself
+  console.info('[sw] !@# API_URL:', sbp('okTurtles.data/get', 'API_URL'))
   await sbp('chelonia/configure', {
     connectionURL: sbp('okTurtles.data/get', 'API_URL'),
     // Because Chelonia state is kept separately from Vuex state, there is

@@ -217,7 +217,7 @@ async function startApp () {
   ).catch(e => {
     console.error('[main] Error setting up service worker', e)
     alert(L('Error while setting up service worker: {err}', { err: e.message }))
-    window.location.reload() // try again, sometimes it fixes it
+    // window.location.reload() // try again, sometimes it fixes it
     throw e
   })
 

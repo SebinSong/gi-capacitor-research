@@ -2,9 +2,10 @@
 
 const util = require('util')
 const chalk = require('chalk')
-const { exec, execSync, fork } = require('child_process')
+const { exec, execSync } = require('child_process')
 const execP = util.promisify(exec)
 const { readdir, cp, mkdir, access, rm, copyFile, readFile } = require('fs/promises')
+const fs = require('fs')
 const path = require('path')
 
 const { resolve } = path
@@ -20,7 +21,7 @@ const {
   UNSAFE_TRUST_ALL_MANIFEST_SIGNING_KEYS = 'false'
 } = process.env
 
-let CONTRACTS_VERSION = packageJSON.contractsVersion
+const CONTRACTS_VERSION = packageJSON.contractsVersion
 // In development, append a timestamp so that browsers will detect a new version
 // and reload whenever the live server is restarted.
 const GI_VERSION = packageJSON.version + (NODE_ENV === 'development' && process.argv[2] === 'dev' ? `@${new Date().toISOString()}` : '')
@@ -56,8 +57,8 @@ module.exports = (grunt) => {
   Object.assign(process.env, { GI_GIT_VERSION })
 
   process.env.API_URL = development
-    ? 'https://debug.groupincome.org/'
-    : 'https://groupincome.app/'
+    ? 'https://debug.groupincome.org'
+    : 'https://groupincome.app'
 
   // Helper functions
 
@@ -125,11 +126,6 @@ module.exports = (grunt) => {
     await deployAndUpdateMainSrc(dir, dest)
   }
 
-  async function genManifestsAndDeploy (dir, version, dest = dbPath) {
-    await generateManifests(dir, version)
-    await deployAndUpdateMainSrc(dir, dest)
-  }
-
   // Used by both the alias plugin and the Vue plugin.
   const aliasPluginOptions = {
     entries: {
@@ -176,6 +172,16 @@ module.exports = (grunt) => {
     tunnel: grunt.option('tunnel') && `gi${crypto.randomBytes(2).toString('hex')}`
   }
 
+  const databaseOptionBags = {
+    fs: {
+      dest: dbPath
+    },
+    sqlite: {
+      dest: `${dbPath}/groupincome.db`
+    }
+  }
+
+  // https://esbuild.github.io/api/
   const esbuildOptionBags = {
     // Native options that are shared between our esbuild tasks.
     default: {
@@ -194,7 +200,7 @@ module.exports = (grunt) => {
         'process.env.ENABLE_UNSAFE_NULL_CRYPTO': `'${ENABLE_UNSAFE_NULL_CRYPTO}'`,
         'process.env.UNSAFE_TRUST_ALL_MANIFEST_SIGNING_KEYS': `'${UNSAFE_TRUST_ALL_MANIFEST_SIGNING_KEYS}'`,
         'process.env.API_URL': `'${process.env.API_URL}'`,
-        'process.env.IS_MOBILE_APP': `'true'`
+        'process.env.IS_MOBILE_APP': '"true"'
       },
       external: ['crypto', '*.eot', '*.ttf', '*.woff', '*.woff2'],
       format: 'esm',
@@ -219,7 +225,8 @@ module.exports = (grunt) => {
     },
     // Native options used when building our service worker(s).
     serviceWorkers: {
-      entryPoints: ['./frontend/controller/serviceworkers/sw-primary.js']
+      entryPoints: ['./frontend/controller/serviceworkers/sw-primary.js'],
+      outdir: distDir
     }
   }
 
@@ -373,8 +380,6 @@ module.exports = (grunt) => {
   // -------------------------------------------------------------------------
   //  Grunt Tasks
   // -------------------------------------------------------------------------
-
-  let child = null
 
   grunt.registerTask('copyAndMoveContracts', async function () {
     const done = this.async()
@@ -567,17 +572,6 @@ module.exports = (grunt) => {
   // -------------------------------------------------------------------------
 
   process.on('exit', () => {
-    // Note: 'beforeExit' doesn't work.
-    // In cases where 'watch' fails while child (server) is still running
-    // we will exit and child will continue running in the background.
-    // This can happen, for example, when running two GIS instances via
-    // the PORT_SHIFT envar. If grunt-contrib-watch livereload process
-    // cannot bind to the port for some reason, then the parent process
-    // will exit leaving a dangling child server process.
-    if (child) {
-      grunt.log.writeln('Quitting dangling child!')
-      child.send({ shutdown: 2 })
-    }
     // Stops the Flowtype server.
     exec('./node_modules/.bin/flow stop')
   })
