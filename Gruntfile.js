@@ -81,6 +81,10 @@ if (!process.env.DB_PATH) {
   Object.assign(process.env, { DB_PATH: dbPath })
 }
 
+const isValidPort = (port) => {
+  return !Number.isNaN(port) && port >= 1024 && port <= 65535
+}
+
 module.exports = (grunt) => {
   require('load-grunt-tasks')(grunt)
 
@@ -91,7 +95,7 @@ module.exports = (grunt) => {
   ;(function defineApiEnvars () {
     const API_PORT = Number.parseInt(grunt.option('port') ?? process.env.API_PORT ?? '8000', 10)
 
-    if (Number.isNaN(API_PORT) || API_PORT < 1024 || API_PORT > 65535) {
+    if (!isValidPort(API_PORT)) {
       throw new RangeError(`Invalid API_PORT value: ${API_PORT}.`)
     }
     process.env.API_PORT = String(API_PORT)
@@ -401,7 +405,12 @@ module.exports = (grunt) => {
         options: { env: { SKIP_DB_FS_CASE_SENSITIVITY_CHECK: 'true', ...process.env } }
       },
       chelDevDeploy: `find contracts -iname "*.manifest.json" | xargs -r ./node_modules/.bin/chel deploy ${dbPath}`,
-      chelProdDeploy: `find ${distContracts} -iname "*.manifest.json" | xargs -r ./node_modules/.bin/chel deploy ${dbPath}`
+      chelProdDeploy: `find ${distContracts} -iname "*.manifest.json" | xargs -r ./node_modules/.bin/chel deploy ${dbPath}`,
+
+      // Ensure below before running this task.
+      // 1. adb(Android Debug Bridge) is installed on the Mac - use homebrew to download and install it on the machine.
+      // 2. either a physical android device or android emulator is connected to the Mac.
+      androidReversePortForwarding: 'adb reverse port:3000 port:3000'
     }
   })
 
@@ -570,6 +579,7 @@ module.exports = (grunt) => {
 
   grunt.registerTask('default', ['dev'])
   grunt.registerTask('dev', ['exec:gitconfig', 'checkDependencies', 'chelDeploy', 'build:watch', 'backend:relaunch', 'keepalive'])
+  grunt.registerTask('dev:android', ['exec:androidReversePortForwarding', 'dev'])
 
   // --------------------
   // - Our esbuild task
@@ -624,6 +634,13 @@ module.exports = (grunt) => {
 
     // BrowserSync setup.
     const browserSync = require('browser-sync').create('esbuild')
+
+    // If there is port override, use it.
+    const portOverride = grunt.option('browsersync-port') || process.env.BROWSER_SYNC_PORT
+    if (portOverride && isValidPort(portOverride)) {
+      browserSyncOptions.port = Number(portOverride)
+    }
+
     browserSync.init(browserSyncOptions)
 
     ;[
