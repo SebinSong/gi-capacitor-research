@@ -49,10 +49,16 @@ console.info('GI_GIT_VERSION:', process.env.GI_GIT_VERSION)
 console.info('CONTRACTS_VERSION:', process.env.CONTRACTS_VERSION)
 console.info('LIGHTWEIGHT_CLIENT:', process.env.LIGHTWEIGHT_CLIENT)
 console.info('NODE_ENV:', process.env.NODE_ENV)
-
+console.info('IS_MOBILE_APP:', process.env.IS_MOBILE_APP)
+console.info('API_URL:', process.env.API_URL)
 // this needs to be done early so that any code that depends on it
 // (like translations stuff) doesn't break.
-sbp('okTurtles.data/set', 'API_URL', self.location.origin)
+
+sbp(
+  'okTurtles.data/set',
+  'API_URL',
+  process.env.IS_MOBILE_APP ? process.env.API_URL : self.location.origin
+)
 
 if (process.env.CI) {
   const originalFetch = self.fetch
